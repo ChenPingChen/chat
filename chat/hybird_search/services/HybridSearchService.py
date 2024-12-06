@@ -244,6 +244,7 @@ class HybridSearchService:
                     ve.violation_type,
                     ve.details,
                     ve.image_url,
+                    ve.image_path,
                     ve.start_time,
                     CASE 
                         WHEN %s AND ve.violation_type = %s THEN 1.0
@@ -299,8 +300,9 @@ class HybridSearchService:
                         'violation_type': row[1],
                         'details': row[2],
                         'image_url': row[3],
-                        'start_time': row[4],
-                        'similarity_score': float(row[5])
+                        'image_path': row[4],
+                        'start_time': row[5],
+                        'similarity_score': float(row[6])
                     })
                 
                 return results
