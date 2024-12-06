@@ -54,10 +54,32 @@ class Command(BaseCommand):
             cur = conn.cursor()
             cur.execute(f"CREATE DATABASE {db_name}")
             
-            self.stdout.write(self.style.SUCCESS(f"Database '{db_name}' created successfully"))
+            # 關閉現有連接
+            cur.close()
+            conn.close()
+            
+            # 連接到新創建的數據庫
+            conn = psycopg2.connect(
+                dbname=db_name,
+                user=db_user,
+                password=db_password,
+                host=settings.DATABASES['default']['HOST']
+            )
+            conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+            cur = conn.cursor()
+            
+            # 創建 vector 擴展
+            cur.execute("CREATE EXTENSION IF NOT EXISTS vector")
+            
+            self.stdout.write(self.style.SUCCESS(f"Database '{db_name}' created successfully with vector extension"))
 
         except psycopg2.Error as e:
             self.stdout.write(self.style.ERROR(f"Error creating database: {e}"))
+        finally:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
 
     def run_migrations(self):
         subprocess.run(['python', 'manage.py', 'makemigrations'])
