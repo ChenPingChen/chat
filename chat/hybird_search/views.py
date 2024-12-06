@@ -4,12 +4,14 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .services.HybridSearchService import HybridSearchService
+from .services.ChatResponseService import ChatResponseService
 import logging
 
 class HybridSearchView(APIView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.search_service = HybridSearchService()
+        self.chat_response_service = ChatResponseService()
         self.logger = logging.getLogger(__name__)
 
     @swagger_auto_schema(
@@ -62,7 +64,8 @@ class HybridSearchView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            results = self.search_service.search(query=query)
+            search_results = self.search_service.search(query=query)
+            results = self.chat_response_service.generate_response(query, search_results)
             
             return Response({
                 'results': results,
