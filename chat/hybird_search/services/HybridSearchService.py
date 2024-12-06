@@ -72,7 +72,8 @@ class HybridSearchService:
         從查詢文本中提取過濾條件
         """
         filters = {
-            'date': None,
+            'start_date': None,
+            'end_date': None,
             'start_time': None,
             'end_time': None,
             'violation_type': None,
@@ -96,12 +97,20 @@ class HybridSearchService:
                 query = query.replace(violation_match.group(0), '').strip()
                 break
         
-        # 1. 提取日期
+        # 提取日期和日期範圍
         date_patterns = [
             (r'(\d{4}[-/]\d{1,2}[-/]\d{1,2})', '%Y-%m-%d'),
             (r'(\d{4}年\d{1,2}月\d{1,2}日)', '%Y年%m月%d日'),
             (r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)', None)
         ]
+        
+        # 日期範圍關鍵詞
+        date_range_keywords = {
+            '以後': lambda d: (d, None),
+            '之後': lambda d: (d, None),
+            '以前': lambda d: (None, d),
+            '之前': lambda d: (None, d)
+        }
         
         for pattern, date_format in date_patterns:
             match = re.search(pattern, query)
@@ -109,13 +118,26 @@ class HybridSearchService:
                 date_str = match.group(1)
                 try:
                     if date_format:
-                        filters['date'] = datetime.strptime(
+                        parsed_date = datetime.strptime(
                             date_str.replace('/', '-'), 
                             date_format
                         )
                     else:
-                        filters['date'] = parser.parse(date_str)
-                    query = query.replace(date_str, '').strip()
+                        parsed_date = parser.parse(date_str)
+                    
+                    # 檢查日期範圍關鍵詞
+                    for keyword, range_converter in date_range_keywords.items():
+                        if keyword in query and query.index(keyword) > query.index(date_str):
+                            start_date, end_date = range_converter(parsed_date)
+                            filters['start_date'] = start_date
+                            filters['end_date'] = end_date
+                            query = query.replace(date_str + keyword, '').strip()
+                            break
+                    else:
+                        # 如果沒有範圍關鍵詞，設置為具體日期
+                        filters['start_date'] = parsed_date
+                        filters['end_date'] = parsed_date
+                        query = query.replace(date_str, '').strip()
                     break
                 except ValueError:
                     continue
@@ -146,12 +168,18 @@ class HybridSearchService:
             """
             params.append(filters['violation_type'])
         
-        # 日期過濾
-        if filters.get('date'):
+        # 日期範圍過濾
+        if filters.get('start_date'):
             sql += """
-                AND DATE(ve.start_time) = %s
+                AND DATE(ve.start_time) >= %s
             """
-            params.append(filters['date'].date())
+            params.append(filters['start_date'].date())
+        
+        if filters.get('end_date'):
+            sql += """
+                AND DATE(ve.start_time) <= %s
+            """
+            params.append(filters['end_date'].date())
         
         # 時間範圍過濾
         if filters.get('start_time'):
