@@ -1,0 +1,21 @@
+#Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+#Django
+*.log
+*.log.*
+*.sqlite3
+*.sqlite3.*
+*.db
+*.db.*
+
+# Migration files (optional, depending on your workflow)
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Log
+*.log
+*.log.*
