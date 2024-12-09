@@ -69,7 +69,6 @@ class HybridSearchView(APIView):
             
             return Response({
                 'results': results,
-                'total': len(results)
             })
             
         except Exception as e:

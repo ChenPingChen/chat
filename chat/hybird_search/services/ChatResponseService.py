@@ -1,10 +1,11 @@
 from typing import List, Dict
 from openai import OpenAI
 from .HybridSearchService import HybridSearchService
+from django.conf import settings
 
 class ChatResponseService:
     def __init__(self):
-        self.client = OpenAI(api_key="your-api-key")
+        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
         self.hybrid_search = HybridSearchService()
         
     def generate_response(self, query: str, search_results: List[Dict]) -> Dict:
@@ -30,7 +31,7 @@ class ChatResponseService:
             
             # 調整回覆參數
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model=settings.OPENAI_MODEL,
                 messages=messages_content,
                 max_tokens=100,
                 temperature=0.7,

@@ -4,13 +4,15 @@ import torch.nn.functional as F
 from transformers import AutoModel, AutoImageProcessor
 from PIL import Image
 import numpy as np
+from django.conf import settings
+
 
 class ImageVectorizeService:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.processor = AutoImageProcessor.from_pretrained("nomic-ai/nomic-embed-vision-v1.5")
+        self.processor = AutoImageProcessor.from_pretrained(settings.VISION_VECTOR_MODEL_PATH)
         self.model = AutoModel.from_pretrained(
-            "nomic-ai/nomic-embed-vision-v1.5", 
+            settings.VISION_VECTOR_MODEL_PATH, 
             trust_remote_code=True
         )
         
