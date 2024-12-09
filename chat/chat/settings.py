@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'hybird_search',
     'pgvector',
     'drf_yasg',
-    'core'
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'chat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chat_database',        # 想要創建的數據庫名稱
+        'NAME': 'chat_database_1',        # 想要創建的數據庫名稱
         'USER': 'postgres',             # 想要創建的用戶名
         'PASSWORD': 'mycena',         # 用戶的密碼
         'HOST': 'localhost',

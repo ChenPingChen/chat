@@ -107,56 +107,56 @@ def process_violation_data(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-# @api_view(['POST'])
-# def batch_process_violations(request):
-#     """
-#     批量處理多筆違規事件JSON數據
+
+@api_view(['POST'])
+def batch_process_violations(request):
+    """
+    批量處理多筆違規事件JSON數據
+    """
+    # 確保請求數據是列表格式
+    data = request.data
+    if not isinstance(data, list):
+        return Response(
+            {'error': '請求數據必須是陣列格式'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
     
-#     請求體應為包含多個違規事件資訊的JSON數組
-#     """
-#     if not isinstance(request.data, list):
-#         return Response(
-#             {'error': '請求數據必須是陣列格式'},
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
+    results = []
+    errors = []
     
-#     results = []
-#     errors = []
-    
-#     for payload in request.data:
-#         try:
-#             with transaction.atomic():
-#                 # 處理單筆資料
-#                 violation_event = ViolationDataProcessor.process_violation_data(payload)
-#                 violation_event.processed_status = 'PROCESSING'
-#                 violation_event.save()
+    for payload in data:
+        try:
+            with transaction.atomic():
+                # 處理單筆資料
+                violation_event = ViolationDataProcessor.process_violation_data(payload)
+                violation_event.processed_status = 'PROCESSING'
+                violation_event.save()
                 
-#                 try:
-#                     # 處理向量化
-#                     vector_service = VectorStoreService()
-#                     vector_store = vector_service.process_and_store_vectors(violation_event)
-#                     violation_event.processed_status = 'COMPLETED'
-#                     violation_event.save()
+                try:
+                    # 處理向量化
+                    vector_service = VectorStoreService()
+                    vector_store = vector_service.process_and_store_vectors(violation_event)
+                    violation_event.processed_status = 'COMPLETED'
+                    violation_event.save()
                     
-#                 except Exception as ve:
-#                     violation_event.processed_status = 'FAILED'
-#                     violation_event.save()
-#                     raise
+                except Exception as ve:
+                    violation_event.processed_status = 'FAILED'
+                    violation_event.save()
+                    raise
                 
-#                 results.append({
-#                     'event_id': str(violation_event.event_id),
-#                     'status': 'success',
-#                     'processed_status': violation_event.processed_status
-#                 })
+                results.append({
+                    'event_id': str(violation_event.event_id),
+                    'status': 'success',
+                    'processed_status': violation_event.processed_status
+                })
                 
-#         except Exception as e:
-#             logger.error(f"處理違規事件資料失敗: {str(e)}")
-#             errors.append({
-#                 'payload': payload,
-#                 'error': str(e)
-#             })
+        except Exception as e:
+            errors.append({
+                'payload': payload,
+                'error': str(e)
+            })
     
-#     return Response({
-#         'results': results,
-#         'errors': errors
-#     }, status=status.HTTP_207_MULTI_STATUS)
+    return Response({
+        'results': results,
+        'errors': errors
+    }, status=status.HTTP_207_MULTI_STATUS)

@@ -1,4 +1,4 @@
-# core/management/commands/create_postgresql.py
+# management/commands/create_postgresql.py
 from django.core.management.base import BaseCommand
 from django.conf import settings
 import psycopg2
