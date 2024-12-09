@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,23 +90,38 @@ WSGI_APPLICATION = 'chat.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'chat_database_1',        # 想要創建的數據庫名稱
+#         'USER': 'postgres',             # 想要創建的用戶名
+#         'PASSWORD': 'mycena',         # 用戶的密碼
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     },
+#     'superuser': {
+#         'USER': 'postgres',  
+#         'PASSWORD': 'mycena', 
+#         'HOST': 'localhost', 
+#     }
+# }
+
+# 資料庫設定
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chat_database_1',        # 想要創建的數據庫名稱
-        'USER': 'postgres',             # 想要創建的用戶名
-        'PASSWORD': 'mycena',         # 用戶的密碼
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     },
     'superuser': {
-        'USER': 'postgres',  
-        'PASSWORD': 'mycena', 
-        'HOST': 'localhost', 
+        'USER': os.getenv('SUPERUSER_NAME'),
+        'PASSWORD': os.getenv('SUPERUSER_PASSWORD'),
+        'HOST': os.getenv('SUPERUSER_HOST'),
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -144,4 +163,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL')
+VISION_VECTOR_MODEL_PATH = os.getenv('VISION_VECTOR_MODEL_PATH')
+TEXT_VECTOR_MODEL_PATH = os.getenv('TEXT_VECTOR_MODEL_PATH')
 

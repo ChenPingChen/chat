@@ -1,10 +1,11 @@
 from openai import OpenAI
 import base64
+from django.conf import settings
 
 
 class ImageDescriptionService:
     def __init__(self):
-        self.client = OpenAI(api_key="api_key")
+        self.client = OpenAI(api_key=settings.OPENAI_API_KEY)
         self.reference_images = self._load_reference_images()
         
     def _load_reference_images(self):
