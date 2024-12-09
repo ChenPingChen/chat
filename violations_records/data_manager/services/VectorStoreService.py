@@ -1,6 +1,6 @@
-from ..models import ViolationEvent, VectorStore
-from .TextVectorizeService import TextVectorizeService
-from .ImageVectorizeService import ImageVectorizeService
+from violations_records.data_manager.models import ViolationEvent, VectorStore
+from violations_records.data_manager.services.TextVectorizeService import TextVectorizeService
+from violations_records.data_manager.services.ImageVectorizeService import ImageVectorizeService
 import logging
 
 

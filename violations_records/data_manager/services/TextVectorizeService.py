@@ -3,14 +3,15 @@ import torch
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 import numpy as np
+from django.conf import settings
 
 
 class TextVectorizeService:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.tokenizer = AutoTokenizer.from_pretrained('nomic-ai/nomic-embed-text-v1.5')
+        self.tokenizer = AutoTokenizer.from_pretrained(settings.TEXT_VECTOR_MODEL_PATH)
         self.model = AutoModel.from_pretrained(
-            'nomic-ai/nomic-embed-text-v1.5',
+            settings.TEXT_VECTOR_MODEL_PATH,
             trust_remote_code=True
         )
         self.model.eval()

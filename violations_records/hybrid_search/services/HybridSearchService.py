@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional, Tuple
 from django.db.models import Q
 from django.db import connection
-from data_manager.services.TextVectorizeService import TextVectorizeService
+from violations_records.data_manager.services.TextVectorizeService import TextVectorizeService
 import logging
 import re
 from datetime import datetime, time

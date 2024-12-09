@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import transaction
-from .services.ViolationDataProcessor import ViolationDataProcessor
-from .services.VectorStoreService import VectorStoreService
+from violations_records.data_manager.services.ViolationDataProcessor import ViolationDataProcessor
+from violations_records.data_manager.services.VectorStoreService import VectorStoreService
 import logging
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi

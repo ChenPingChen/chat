@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .services.HybridSearchService import HybridSearchService
-from .services.ChatResponseService import ChatResponseService
+from violations_records.hybrid_search.services.HybridSearchService import HybridSearchService
+from violations_records.hybrid_search.services.ChatResponseService import ChatResponseService
 import logging
 
 class HybridSearchView(APIView):
@@ -69,7 +69,6 @@ class HybridSearchView(APIView):
             
             return Response({
                 'results': results,
-                'total': len(results)
             })
             
         except Exception as e:

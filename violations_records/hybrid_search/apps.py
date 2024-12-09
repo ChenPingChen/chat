@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class HybirdSearchConfig(AppConfig):
+class HybridSearchConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'hybird_search'
+    name = 'violations_records.hybrid_search'

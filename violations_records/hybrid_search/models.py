@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from data_manager.models import ViolationEvent
+from violations_records.data_manager.models import ViolationEvent
 import uuid
 
 

@@ -1,6 +1,6 @@
 from typing import Dict, Any
 import json
-from data_manager.models import ViolationEvent, PersonInfo, VectorStore
+from violations_records.data_manager.models import ViolationEvent, PersonInfo
 
 class ViolationDataProcessor:
     @staticmethod
